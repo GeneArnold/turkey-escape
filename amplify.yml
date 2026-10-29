@@ -9,7 +9,7 @@ frontend:
         - mkdir -p dist
         # The commit to stamp. A build started by hand in the console gets AWS_COMMIT_ID "HEAD", so git comes first.
         - git rev-parse HEAD > .commit 2>/dev/null || echo "$AWS_COMMIT_ID" > .commit
-        - cp -r index.html style.css manifest.webmanifest sw.js vendor js icons img dist/
+        - cp -r index.html style.css manifest.webmanifest sw.js vendor js icons img voices dist/
         - sed -i "s/turkey-dev/turkey-$(cut -c1-12 .commit)/" dist/sw.js
         - grep -q 'turkey-dev' dist/sw.js && echo "sw.js VERSION was not stamped" && exit 1 || true
         # The version the title screen shows, and version.json, which tells installed copies a newer one is out.

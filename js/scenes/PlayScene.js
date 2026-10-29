@@ -87,8 +87,12 @@ export class PlayScene extends Phaser.Scene {
     this.listen();
     const away = () => document.hidden && this.pause();
     document.addEventListener("visibilitychange", away);
-    this.events.once("shutdown", () => document.removeEventListener("visibilitychange", away));
+    this.events.once("shutdown", () => {
+      document.removeEventListener("visibilitychange", away);
+      audio.stopMusic();
+    });
     audio.play("gobble");
+    audio.startMusic(150 + this.run.day * 14); // a little faster each day
   }
 
   // ---- input ----
@@ -154,6 +158,7 @@ export class PlayScene extends Phaser.Scene {
   pause() {
     if (this.phase !== "run" || !this.scene.isActive()) return;
     this.scene.pause();
+    audio.stopMusic();
     this.scene.launch("Pause");
   }
 
@@ -375,7 +380,8 @@ export class PlayScene extends Phaser.Scene {
         // one at a time: a new power-up replaces the one going
         for (const name in this.powerT) this.powerT[name] = 0;
         this.powerT[t.kind] = POWERS[t.kind].seconds;
-        audio.play("pumpkin");
+        audio.play(t.kind === "pumpkin" ? "pumpkin" : t.kind);
+        this.time.delayedCall(250, () => audio.say("turkey-" + t.kind));
         floatText(this, this.turkey.x, this.turkey.y - 150, POWERS[t.kind].says, "#ffb347", 30);
       }
       return;
@@ -394,7 +400,7 @@ export class PlayScene extends Phaser.Scene {
     if (this.powerT.sneakers > 0) {
       // in turbo sneakers, the turkey smashes straight through
       this.knock(t);
-      audio.play("bonk");
+      audio.play("smash");
       floatText(this, this.turkey.x, this.turkey.y - 150, "BOOF!", "#ffffff", 30);
       return;
     }
@@ -415,6 +421,7 @@ export class PlayScene extends Phaser.Scene {
     this.lastStumble = this.clock;
     audio.play("bonk");
     this.time.delayedCall(250, () => audio.play("pan"));
+    this.time.delayedCall(500, () => audio.say("farmer-close-" + Phaser.Math.Between(0, 2)));
     this.cameras.main.shake(200, 0.01);
     this.tweens.add({ targets: this.turkey, angle: { from: -25, to: 0 }, duration: 500, ease: "Back.easeOut" });
     floatText(this, this.turkey.x, this.turkey.y - 150, "WHOOPS!", "#ff9e9e", 32);
@@ -462,6 +469,7 @@ export class PlayScene extends Phaser.Scene {
     this.run.score += POINTS.day;
     const last = this.run.day === DAYS.length - 1;
     const show = MADE_IT[this.run.day];
+    audio.stopMusic();
     audio.play(last ? "fanfare" : "cheer");
     const dim = this.add.rectangle(0, 0, W, H, 0x000000, 0.5).setOrigin(0).setDepth(4900).setAlpha(0);
     this.tweens.add({ targets: dim, alpha: 1, duration: 250 });
@@ -472,7 +480,9 @@ export class PlayScene extends Phaser.Scene {
       onComplete: () => this.tweens.add({ targets: face, angle: { from: -4, to: 4 }, duration: 260, yoyo: true, repeat: -1, ease: "Sine.easeInOut" }) });
 
     // What it says, in a speech bubble
-    const said = Phaser.Utils.Array.GetRandom(show.lines);
+    const pick = Phaser.Math.Between(0, show.lines.length - 1);
+    const said = show.lines[pick];
+    this.time.delayedCall(700, () => audio.say(`turkey-made-${this.run.day}-${pick}`));
     // drawn around its middle, so it can pop up from nothing
     const bubble = this.add.graphics({ x: W / 2, y: 275 }).setDepth(5001);
     const bw = W - 80;
@@ -520,7 +530,9 @@ export class PlayScene extends Phaser.Scene {
 
   caught() {
     this.phase = "caught";
+    audio.stopMusic();
     audio.play("pan");
+    this.time.delayedCall(200, () => audio.say("farmer-caught"));
     this.cameras.main.shake(250, 0.012);
     // The farmer lunges and flings his roasting pan up out of his hands, and it comes down over the
     // turkey. Plonk.

@@ -35,6 +35,7 @@ export class DayScene extends Phaser.Scene {
     const go = text(this, W / 2, 840, "TAP TO RUN!", 44, { color: "#ffe066", strokeThickness: 8 });
     this.tweens.add({ targets: go, scale: 1.08, duration: 500, yoyo: true, repeat: -1, ease: "Sine.easeInOut" });
     audio.play(r.boss ? "pan" : "gobble");
+    this.time.delayedCall(r.boss ? 450 : 600, () => audio.say("farmer-day-" + run.day));
 
     this.started = false;
     listenForGestures(this, { lockMs: 600, onTap: () => this.start(), onSwipe: () => this.start() });

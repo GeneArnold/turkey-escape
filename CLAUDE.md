@@ -9,8 +9,10 @@ Gene chose a **chase runner** (three lanes, swipes, a farmer chasing), in the sp
 endless-runner genre he pointed at, but our own turkey game, not a copy of any one game.
 A first playable with stand-in art drawn in code is built; see README.md. Next: Gene tries it on
 his phone, then the art. **New farmer and new farm**: nothing from Feed the Chickens (Uncle Bob's
-game is his alone). Release: probably the Nov 23 slot, but Gene says not to worry about dates.
-Online scores are off (`scoresUrl: null`) until the funshed session adds the app to the Shed.
+game is his alone). Release: Monday Nov 9 (the calendar is in thefunshed/wiki/calendar.md).
+Scores are phone-only (Gene, 2026-10-29): there's no online board and no server code at all.
+
+House rules: read /mnt/storage/Workspace/thefunshed/wiki/kit.md before any shared-screen work.
 
 Art (2026-10-28): the first cartoon art is in. The prompts are in `tools/art-prompts.py` and the
 picks are listed in BootScene `SPRITES`. Gene liked the turkeys. Our own turkey (Gene doesn't mind
@@ -100,6 +102,6 @@ Read their READMEs first. The basics:
 ## Going live
 
 When it's ready to go live:
-1. Make a GitHub repo, GeneArnold/turkey-bowling. It can be public.
-2. Gene creates an Amplify app in the Entertainment AWS account (Ohio), with Gen2 Backend unticked.
+1. Make a GitHub repo, GeneArnold/turkey-escape. It can be public. (Done 2026-10-29.)
+2. Gene creates an Amplify app in the Entertainment AWS account (Ohio), with Gen2 Backend unticked. (Done: app id d106hv1hi2inhx.)
 3. The thefunshed session attaches `turkey.thefunshed.com` and adds the game to the home page.
