@@ -1,0 +1,75 @@
+// Everything the game remembers, in localStorage on this phone only.
+// The browser may clear it (clearing site data, or uninstalling the app); that only costs scores.
+const KEY = "turkey.v1";
+const BOARD_SIZE = 10;
+export const BOARD = "run"; // one high-score board: every run starts on Monday
+
+const DEFAULTS = {
+  player: null,    // { initials }: who plays on this phone
+  sound: true,
+  board: [],       // this phone's top 10, [{ initials, score, day, at }], best first; day 5 = pardoned
+  totals: { corn: 0, runs: 0, pardons: 0 },
+  challenge: null, // { initials, score } from a dare link, until it is played
+};
+
+let cache = null;
+
+function load() {
+  if (cache) return cache;
+  try {
+    cache = { ...DEFAULTS, ...JSON.parse(localStorage.getItem(KEY) || "{}") };
+  } catch {
+    cache = { ...DEFAULTS };
+  }
+  delete cache.outbox; // left over from when scores went online
+  return cache;
+}
+
+function persist() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(cache));
+  } catch {
+    // Storage full or blocked (private window): keep playing, just without saving.
+  }
+}
+
+export function get(name) {
+  return load()[name];
+}
+
+export function set(name, value) {
+  load()[name] = value;
+  persist();
+}
+
+export function setInitials(initials) {
+  const data = load();
+  data.player = { initials };
+  persist();
+}
+
+export function board() {
+  return load().board;
+}
+
+export function topScore() {
+  return Math.max(0, ...load().board.map((r) => r.score));
+}
+
+// Saves a finished run. day: 1-4 for the day the farmer caught you, 5 for pardoned.
+// → { rank (1-10, or 0 if it missed the board), previousTop }
+export function recordRun(score, day, corn) {
+  const data = load();
+  const previousTop = topScore();
+  const entry = { initials: data.player.initials, score, day, at: Date.now() };
+  if (score > 0) {
+    data.board = [...data.board, entry].sort((a, b) => b.score - a.score || a.at - b.at).slice(0, BOARD_SIZE);
+  }
+  const t = { ...DEFAULTS.totals, ...data.totals };
+  t.corn += corn;
+  t.runs++;
+  if (day === 5) t.pardons++;
+  data.totals = t;
+  persist();
+  return { rank: score > 0 ? data.board.indexOf(entry) + 1 : 0, previousTop };
+}
