@@ -24,14 +24,6 @@ const DUCK_S = 0.62;
 const SWIPE = 22;         // a finger moving this far is a swipe
 const PAUSE = { x: W / 2 - 40, y: 0, w: 80, h: 76 };
 
-// The end of each day: the turkey's big face pops up and it says something. One of these, by day.
-const MADE_IT = [
-  { face: "turkey-phew", fx: "sweat", lines: ["WOW, I'M NOT\nGETTING COOKED!", "PHEW!\nNOT COOKED YET!", "THAT WAS\nTOO CLOSE!"] },
-  { face: "turkey-yay", fx: "confetti", lines: ["STILL NOT\nSTUFFING!", "NO GRAVY\nFOR ME!", "GOBBLE GOBBLE,\nSUCKER!"] },
-  { face: "turkey-phew", fx: "sweat", lines: ["THANKSGIVING\nIS TOMORROW?!", "I'M SWEATING\nGRAVY HERE!", "TOO HOT.\nOVEN HOT."] },
-  { face: "turkey-cool", fx: "confetti", lines: ["NO OVEN FOR ME.\nPIZZA TONIGHT!"] },
-];
-
 const perspective = (z) => NEAR / (NEAR + Math.max(z, -NEAR + 0.5));
 const groundY = (s) => HORIZON + (GROUND_Y - HORIZON) * s;
 
@@ -463,7 +455,7 @@ export class PlayScene extends Phaser.Scene {
     this.phase = "made-it";
     this.run.score += POINTS.day;
     const last = this.run.day === DAYS.length - 1;
-    const show = MADE_IT[this.run.day];
+    const show = this.rules.madeIt; // the turkey's big face pops up and it says something
     audio.play(last ? "fanfare" : "cheer");
     const dim = this.add.rectangle(0, 0, W, H, 0x000000, 0.5).setOrigin(0).setDepth(4900).setAlpha(0);
     this.tweens.add({ targets: dim, alpha: 1, duration: 250 });
@@ -476,7 +468,7 @@ export class PlayScene extends Phaser.Scene {
     // What it says, in a speech bubble
     const pick = Phaser.Math.Between(0, show.lines.length - 1);
     const said = show.lines[pick];
-    this.time.delayedCall(700, () => audio.say(`turkey-made-${this.run.day}-${pick}`));
+    this.time.delayedCall(700, () => audio.say(`turkey-made-${this.rules.id}-${pick}`));
     // drawn around its middle, so it can pop up from nothing
     const bubble = this.add.graphics({ x: W / 2, y: 275 }).setDepth(5001);
     const bw = W - 80;
@@ -491,7 +483,7 @@ export class PlayScene extends Phaser.Scene {
     this.tweens.add({ targets: t, scale: 1, duration: 400, ease: "Back.easeOut" });
     if (!last) text(this, W / 2, 448, `+${POINTS.day} · on to ${DAYS[this.run.day + 1].name}`, 24, { color: "#ffffff", strokeThickness: 6 }).setDepth(5003);
 
-    if (show.fx === "sweat") this.sweat(face);
+    if (show.face === "turkey-phew") this.sweat(face);
     else this.confetti();
     this.time.delayedCall(3600, () => {
       if (last) return this.finish(true);

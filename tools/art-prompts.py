@@ -27,6 +27,8 @@ FARMER = ("character sheet of the same big goofy cartoon farmer man, chubby, a w
           "roasting pan over his head, 4 seen from directly behind diving forward with both arms out")
 
 ONE = ", front view, facing the viewer, simple and clean, no shadow, no ground"
+# for things to duck under: they hang high, with room for the turkey underneath
+HIGH = ", strung high up between two tall thin wooden poles, lots of empty space underneath" + ONE
 THINGS = {
     # jump over
     "fence": "a single short section of a wooden farm fence, three white rails between two posts" + ONE,
@@ -51,6 +53,34 @@ THINGS = {
     "cornstalk": "a single tall dry golden corn stalk with leaves and one ear of corn" + ONE,
     "house": "a single small cozy wooden house with a porch and a pumpkin on the steps" + ONE,
     "lamp": "a single old fashioned black street lamp" + ONE,
+    # the days added on 2026-10-29: pumpkin patch, orchard, fair, market, parking lot, parade, first snow
+    "pumpkins": "a single low pile of five round orange pumpkins" + ONE,
+    "wheelbarrow": "a single old red wheelbarrow full of orange pumpkins, seen from the front" + ONE,
+    "basket": "a single big wooden bushel basket overflowing with red apples" + ONE,
+    "ladder": "a single long wooden orchard ladder lying sideways, horizontal, rungs pointing up and down" + HIGH,
+    "applecart": "a single wooden farm cart piled high with red apples, big wooden wheels, seen from the back end" + ONE,
+    "appletree": "a single round apple tree with green leaves and lots of red apples" + ONE,
+    "pigpen": "a single short low wooden pig pen fence with a muddy pink pig peeking over it" + ONE,
+    "bunting": "a string of colorful triangle party flags" + HIGH,
+    "candy": "a single little striped cotton candy stand on wheels with pink and blue cotton candy, seen from the front" + ONE,
+    "tent": "a single red and white striped county fair tent with a little flag on top" + ONE,
+    "squash": "a single wooden crate full of green and orange squash and gourds" + ONE,
+    "awning": "a red and white striped cloth awning" + HIGH,
+    "piecart": "a single little wooden market cart with a striped umbrella, full of pies, seen from the front" + ONE,
+    "stall": "a single little wooden farmers market stall with a striped awning and baskets of vegetables" + ONE,
+    "cone": "a single orange and white traffic cone" + ONE,
+    "cart": "a single empty silver grocery shopping cart, seen from the front" + ONE,
+    "car": "a single little round cartoon family car, seen from the back, red, small and cute" + ONE,
+    "sign": "a single big hanging red and yellow store sign with no writing on it, blank" + HIGH,
+    "drum": "a single big marching band bass drum lying on its side, red and gold" + ONE,
+    "float": "a single parade float shaped like a giant cornucopia full of fruit, on a flatbed, seen from the back" + ONE,
+    "streamers": "a long garland of orange yellow and brown paper streamers and leaves" + HIGH,
+    "balloon": "a single big round orange parade balloon shaped like a smiling pumpkin, floating, with ropes hanging down" + ONE,
+    "snowman": "a single round friendly snowman with a carrot nose, a scarf and a top hat" + ONE,
+    "sled": "a single old wooden sled with red runners" + ONE,
+    "ice": "a single wide flat patch of shiny pale blue ice seen from slightly above, flat on the ground, no shadow",
+    "icebranch": "a long snowy tree branch with icicles hanging from it" + HIGH,
+    "pine": "a single snowy green pine tree" + ONE,
     # the app icon (tools/make-icons.py)
     "icon-run": "a single plump cartoon Thanksgiving turkey running for his life straight toward the viewer, panicked "
                 "terrified face with huge wide eyes and open beak, big sweat drops flying off his head, legs pumping "
@@ -71,6 +101,27 @@ SKIES = {
     "town": "wide panoramic landscape of a small cartoon country town far away, a main street with little "
             "brick shops, a white church steeple, a water tower, autumn trees, late afternoon sky"
             + FLAT.format("green grass"),
+    "patch": "wide panoramic landscape of a cartoon pumpkin patch far away, rows of orange pumpkins, a red barn, a hay "
+             "maze, autumn trees, a bright blue sky"
+             + FLAT.format("green and brown grass"),
+    "orchard": "wide panoramic landscape of a cartoon apple orchard far away, neat rows of round apple trees with red "
+               "apples, a little red farm stand, rolling green hills, a soft blue sky"
+               + FLAT.format("green grass"),
+    "fair": "wide panoramic landscape of a cartoon county fair far away, a big ferris wheel, striped tents, colorful "
+            "flags, a red barn, an early evening pink and orange sky"
+            + FLAT.format("trampled green grass"),
+    "market": "wide panoramic landscape of a cartoon small town farmers market far away, rows of little stalls with "
+              "striped awnings, a brick clock tower, autumn trees, a sunny morning sky"
+              + FLAT.format("grey cobblestone"),
+    "lot": "wide panoramic landscape of a big cartoon grocery store far away with a big empty blank sign, rows of "
+           "parked cars, tall parking lot lamps, a cloudy afternoon sky"
+           + FLAT.format("grey asphalt"),
+    "parade": "wide panoramic landscape of a cartoon city street parade far away, giant floating balloons shaped like "
+              "a turkey and a pumpkin, tall buildings, crowds of tiny dots, confetti, a bright blue sky"
+              + FLAT.format("grey street"),
+    "snow": "wide panoramic landscape of a snowy countryside far away at dusk, the first snow, snowy pine trees, a "
+            "farmhouse with warm lit windows, snowflakes falling, a deep blue and purple evening sky"
+            + FLAT.format("white snow"),
     "feast": "wide panoramic landscape of the countryside at a glowing orange Thanksgiving sunset, a cozy "
              "farmhouse with warm lit windows far away, autumn trees, orange and pink sky, a few dark clouds"
              + FLAT.format("brown autumn grass"),

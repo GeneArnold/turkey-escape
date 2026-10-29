@@ -28,7 +28,7 @@ export class ResultsScene extends Phaser.Scene {
 
     woodSign(this, W / 2, 200, 470, 300);
     text(this, W / 2, 90, pardoned ? "PARDONED!" : "CAUGHT!", 50, { color: pardoned ? "#7CFC9A" : "#ffe066" });
-    const how = pardoned ? "free as a bird · pizza for dinner" : `${me.initials} · caught on ${DAYS[day - 1].name}`;
+    const how = pardoned ? "free as a bird · pizza for dinner" : `${me.initials} · caught ${DAYS[day - 1].caught}`;
     text(this, W / 2, 136, how, 22, { color: "#fff3c4", strokeThickness: 4 });
     const scoreText = text(this, W / 2, 212, "0", 90, { color: "#ffffff", strokeThickness: 10 });
     const countUp = Math.min(1200, 200 + score / 4);

@@ -6,7 +6,9 @@
 const SIZE = {}; // each stand-in's size: a picture of any size is shown at its width or height
 // Things in the road and the pick-ups are fitted to their stand-in's width (so they fill the lane);
 // the characters and the roadside props to its height.
-const BY_WIDTH = ["fence", "hay", "puddle", "crate", "banner", "tractor", "wagon", "truck", "corn", "pumpkin", "sneakers", "magnet"];
+const BY_WIDTH = ["fence", "hay", "puddle", "crate", "banner", "tractor", "wagon", "truck", "corn", "pumpkin", "sneakers", "magnet",
+  "pumpkins", "basket", "pigpen", "squash", "cone", "drum", "sled", "ice", "ladder", "bunting", "awning", "sign", "streamers",
+  "icebranch", "wheelbarrow", "applecart", "candy", "piecart", "cart", "car", "float", "snowman"];
 
 function make(scene, key, w, h, draw) {
   SIZE[key] = { w, h };
@@ -183,6 +185,28 @@ export function makeTextures(scene) {
     g.fillStyle(0xd32f2f).fillRect(14, 88, 22, 14).fillRect(114, 88, 22, 14);
     g.fillStyle(INK).fillRect(12, 150, 34, 30).fillRect(104, 150, 34, 30);
   });
+
+  // The later days' things in the way, as plain shapes until their pictures load: a box to jump,
+  // a band on two posts to duck under, a big block to swerve round.
+  const box = (colour) => (g, w, h) => {
+    g.fillStyle(INK).fillRoundedRect(0, 0, w, h, 12);
+    g.fillStyle(colour).fillRoundedRect(3, 3, w - 6, h - 6, 10);
+  };
+  const band = (colour) => (g) => {
+    posts(g, 0x8a5a2b);
+    g.fillStyle(INK).fillRect(10, 36, 130, 50);
+    g.fillStyle(colour).fillRect(13, 39, 124, 44);
+  };
+  for (const [key, w, h, colour] of [
+    ["pumpkins", 140, 80, 0xf07c1a], ["basket", 120, 96, 0xb5803f], ["pigpen", 150, 84, 0xf4a6b8], ["squash", 120, 96, 0x8fae3c],
+    ["cone", 90, 90, 0xff7a1a], ["drum", 130, 90, 0xc0392b], ["sled", 140, 60, 0xa0522d], ["ice", 150, 44, 0xbfe6f5],
+    ["wheelbarrow", 150, 150, 0xc0392b], ["applecart", 150, 170, 0x8a5a2b], ["candy", 150, 190, 0xf4a6c8], ["piecart", 150, 180, 0xe8c55a],
+    ["cart", 140, 150, 0xc8ccd4], ["car", 150, 150, 0xd32f2f], ["float", 150, 200, 0xf0a020], ["snowman", 130, 190, 0xffffff],
+    ["appletree", 140, 220, 0x5a9e3a], ["tent", 200, 200, 0xe74c3c], ["stall", 180, 190, 0xb5803f], ["balloon", 140, 240, 0xf07c1a],
+    ["pine", 130, 230, 0x2e7d4f],
+  ]) make(scene, key, w, h, box(colour));
+  for (const [key, colour] of [["ladder", 0xb5803f], ["bunting", 0xf0a020], ["awning", 0xe74c3c], ["sign", 0xf7d33c],
+    ["streamers", 0xe0662a], ["icebranch", 0xdde6f0]]) make(scene, key, 150, 200, band(colour));
 
   // Pick-ups
   make(scene, "corn", 34, 54, (g) => {

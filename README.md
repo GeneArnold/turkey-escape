@@ -1,9 +1,9 @@
 # Turkey Escape
 
-It's the week before Thanksgiving, and the turkey has worked out what the farmer is planning. Run!
+It's ten days before Thanksgiving, and the turkey has worked out what the farmer is planning. Run!
 Swipe up to jump, down to duck, left and right to change lanes. Grab the corn, and don't let the
-farmer catch you. Make it through Monday, Tuesday and Wednesday, survive Thanksgiving Day, and the
-turkey is pardoned.
+farmer catch you. Make it through ten days, survive Thanksgiving Day, and the turkey is pardoned.
+Caught means back to the start, arcade style.
 
 A Fun Shed game: plain HTML and JavaScript with [Phaser 3.90](https://phaser.io) saved in
 `vendor/`. There is no build step, it installs on phones as an app, and it plays offline. Built the
@@ -16,7 +16,7 @@ python3 tools/serve.py
 ```
 
 Open http://127.0.0.1:8797 (or `http://<this computer's address>:8797` on a phone on the home
-network). Arrow keys work as swipes. `?day=4` starts on Thanksgiving, for trying the later days.
+network). Arrow keys work as swipes. `?day=11` starts on Thanksgiving, for trying the later days.
 On localhost and plain http the offline cache is switched off, so edits show up on a plain reload.
 
 ## How it plays
@@ -31,8 +31,9 @@ On localhost and plain http the offline cache is switched off, so edits show up 
   he's got you: CAUGHT.
 - **Corn** is 10 points; every step is a point; each day you make it through is 500, and the pardon
   2,500. A **pumpkin** takes one hit for you.
-- **Days:** Monday on the farm, Tuesday in the cornfield, Wednesday in town, each faster and
-  busier. **Thanksgiving** is the finale: the farmer never lets up, so one slip and he's got you.
+- **Days:** eleven of them, each faster and busier: the farm, the cornfield, the pumpkin patch, the
+  apple orchard, the county fair, the farmers' market, town, the grocery store, the parade and the
+  first snow. **Thanksgiving** is the finale: the farmer never lets up, so one slip and he's got you.
 - The first two runs on a phone start with a short lesson on Monday.
 - The pause button (top middle) stops the run, with KEEP PLAYING or QUIT. Switching apps, or the
   phone's back gesture, pauses too.
@@ -61,4 +62,4 @@ check each can be got through.
 ## Releasing
 
 Same as Fruitcake: a GitHub repo, an Amplify app in the Entertainment AWS account, and every push
-to `main` is a release, at https://turkey.thefunshed.com. Not set up yet.
+to `main` is a release, at https://escape.thefunshed.com (Amplify app d106hv1hi2inhx).

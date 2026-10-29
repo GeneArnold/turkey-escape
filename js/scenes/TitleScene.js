@@ -7,6 +7,7 @@ import * as audio from "../audio.js";
 import * as store from "../storage.js";
 import { install, installHint, onHintChange } from "../install.js";
 import { listenForGestures } from "../gestures.js";
+import { DAYS } from "../rules.js";
 import { sized } from "../textures.js";
 import { checkForUpdate, update, versionLabel } from "../update.js";
 import { W, backdrop, button, inside, setupCamera, text, woodSign } from "../ui.js";
@@ -15,8 +16,8 @@ const PLAY = { x: W / 2 - 150, y: 410, w: 300, h: 90 };
 const SCORES = { x: W / 2 - 110, y: 524, w: 220, h: 56 };
 const INSTALL = { x: 40, y: 906, w: W - 80, h: 34 }; // the install hint, or the update button
 const VERSION_AREA = { x: 60, y: 940, w: W - 120, h: 20 };
-// ?day=3 starts on day 3 (Wednesday), for trying out the later days.
-const START_DAY = Phaser.Math.Clamp((parseInt(new URLSearchParams(location.search).get("day"), 10) || 1) - 1, 0, 3);
+// ?day=3 starts on day 3 (the pumpkin patch), for trying out the later days.
+const START_DAY = Phaser.Math.Clamp((parseInt(new URLSearchParams(location.search).get("day"), 10) || 1) - 1, 0, DAYS.length - 1);
 
 export class TitleScene extends Phaser.Scene {
   constructor() {

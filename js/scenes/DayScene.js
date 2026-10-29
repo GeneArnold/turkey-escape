@@ -11,7 +11,7 @@ export class DayScene extends Phaser.Scene {
     super("Day");
   }
 
-  // run: { day (0-3), score, corn }
+  // run: { day (0 to DAYS.length - 1), score, corn }
   create(run) {
     setupCamera(this);
     this.run = run;
@@ -30,12 +30,14 @@ export class DayScene extends Phaser.Scene {
       text(this, W / 2, 690, "Grab the corn. Don't get caught!", 24, { color: "#ffe066", strokeThickness: 5 });
     } else if (r.boss) {
       text(this, W / 2, 580, "One slip and he's got you.\nPumpkins will save you!", 28, { color: "#ffffff", strokeThickness: 6 });
+    } else if (r.tip) {
+      text(this, W / 2, 580, r.tip, 30, { color: "#ffe066", strokeThickness: 6 });
     }
 
     const go = text(this, W / 2, 840, "TAP TO RUN!", 44, { color: "#ffe066", strokeThickness: 8 });
     this.tweens.add({ targets: go, scale: 1.08, duration: 500, yoyo: true, repeat: -1, ease: "Sine.easeInOut" });
     audio.play(r.boss ? "pan" : "gobble");
-    this.time.delayedCall(r.boss ? 450 : 600, () => audio.say("farmer-day-" + run.day));
+    this.time.delayedCall(r.boss ? 450 : 600, () => audio.say("farmer-day-" + r.id));
 
     this.started = false;
     listenForGestures(this, { lockMs: 600, onTap: () => this.start(), onSwipe: () => this.start() });

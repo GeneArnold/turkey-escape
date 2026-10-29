@@ -1,5 +1,7 @@
 // Everything the game remembers, in localStorage on this phone only.
 // The browser may clear it (clearing site data, or uninstalling the app); that only costs scores.
+import { DAYS } from "./rules.js";
+
 const KEY = "turkey.v1";
 const BOARD_SIZE = 10;
 export const BOARD = "run"; // one high-score board: every run starts on Monday
@@ -7,7 +9,8 @@ export const BOARD = "run"; // one high-score board: every run starts on Monday
 const DEFAULTS = {
   player: null,    // { initials }: who plays on this phone
   sound: true,
-  board: [],       // this phone's top 10, [{ initials, score, day, at }], best first; day 5 = pardoned
+  board: [],       // this phone's top 10, [{ initials, score, day, at }], best first; day 12 = pardoned
+  days: DAYS.length, // how many days a run had when the board was kept
   totals: { corn: 0, runs: 0, pardons: 0 },
   challenge: null, // { initials, score } from a dare link, until it is played
 };
@@ -22,6 +25,11 @@ function load() {
     cache = { ...DEFAULTS };
   }
   delete cache.outbox; // left over from when scores went online
+  // A board from the four-day game can't be compared with eleven-day runs: it starts again.
+  if (cache.days !== DEFAULTS.days) {
+    cache.board = [];
+    cache.days = DEFAULTS.days;
+  }
   return cache;
 }
 
@@ -56,7 +64,7 @@ export function topScore() {
   return Math.max(0, ...load().board.map((r) => r.score));
 }
 
-// Saves a finished run. day: 1-4 for the day the farmer caught you, 5 for pardoned.
+// Saves a finished run. day: 1-11 for the day the farmer caught you, 12 for pardoned.
 // → { rank (1-10, or 0 if it missed the board), previousTop }
 export function recordRun(score, day, corn) {
   const data = load();
@@ -68,7 +76,7 @@ export function recordRun(score, day, corn) {
   const t = { ...DEFAULTS.totals, ...data.totals };
   t.corn += corn;
   t.runs++;
-  if (day === 5) t.pardons++;
+  if (day > DEFAULTS.days) t.pardons++;
   data.totals = t;
   persist();
   return { rank: score > 0 ? data.board.indexOf(entry) + 1 : 0, previousTop };

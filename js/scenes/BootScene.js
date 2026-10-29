@@ -11,6 +11,10 @@ export const SPRITES = [
   "turkey", "turkey-scared", "turkey-phew", "turkey-yay", "turkey-cool", "farmer", "farmer-front", "farmer-empty", "lid",
   "fence", "hay", "puddle", "crate", "line", "banner", "tractor", "wagon", "truck",
   "corn", "pumpkin", "sneakers", "sneaker", "magnet", "tree", "scarecrow", "house", "lamp",
+  // the later days
+  "pumpkins", "basket", "pigpen", "squash", "cone", "drum", "sled", "ice", "ladder", "bunting", "awning", "sign", "streamers",
+  "icebranch", "wheelbarrow", "applecart", "candy", "piecart", "cart", "car", "float", "snowman",
+  "appletree", "tent", "stall", "balloon", "pine",
 ];
 // The far scenery for each day, img/sky-<day>.jpg (see drawSky in PlayScene).
 const SKIES = DAYS.map((d) => "sky-" + d.id);

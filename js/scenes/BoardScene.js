@@ -2,12 +2,14 @@
 // The high scores, arcade style: a top 10 with the day each turkey got caught (or FREE). BACK (or any
 // swipe) goes back to the title. Scores stay on this phone: to get on its board, you play on it.
 import * as store from "../storage.js";
+import { DAYS } from "../rules.js";
 import { listenForGestures } from "../gestures.js";
 import { H, W, backdrop, button, inside, setupCamera, text, woodSign } from "../ui.js";
 
 const BACK = { x: W / 2 - 80, y: H - 76, w: 160, h: 56 };
 
-const DAY_NAMES = ["", "MON", "TUE", "WED", "THU", "FREE!"];
+// the day each turkey got caught: 1 to 11, or 12 for pardoned
+const DAY_NAMES = ["", ...DAYS.map((d) => d.short), "FREE!"];
 
 const MEDALS = ["#ffd700", "#e8eef5", "#e0995e"];
 
@@ -52,7 +54,7 @@ export class BoardScene extends Phaser.Scene {
       }
       this.content.add(text(this, 92, y, `${i + 1}`, 32, { color: colour, originX: 1 }));
       this.content.add(text(this, 124, y, r.initials, 36, { color: colour, originX: 0 }));
-      if (r.day) this.content.add(text(this, 300, y, DAY_NAMES[r.day] ?? "", 22, { color: r.day === 5 ? "#7CFC9A" : "#fff3c4" }));
+      if (r.day) this.content.add(text(this, 300, y, DAY_NAMES[r.day] ?? "", 22, { color: r.day > DAYS.length ? "#7CFC9A" : "#fff3c4" }));
       this.content.add(text(this, W - 50, y, r.score.toLocaleString(), 34, { color: colour, originX: 1 }));
     });
   }
