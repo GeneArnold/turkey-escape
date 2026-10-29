@@ -52,8 +52,6 @@ export class PauseScene extends Phaser.Scene {
     audio.play("pop");
     this.scene.stop();
     this.scene.resume("Play");
-    const play = this.scene.get("Play");
-    audio.startMusic(150 + play.run.day * 14);
   }
 
   quit() {

@@ -1,4 +1,4 @@
-// Sound: effects and a chase tune made with the Web Audio API, plus the recorded voice lines
+// Sound: effects made with the Web Audio API, plus the recorded voice lines
 // (js/voices.js). Browsers only allow sound after a touch, and Android only once the touch has ended,
 // so unlock() runs on both the start and the end of a touch.
 import { voiceUrl } from "./voices.js";
@@ -10,8 +10,6 @@ const voices = new Map(); // url → decoded AudioBuffer
 
 export function setEnabled(on) {
   enabled = on;
-  if (!on) silence();
-  else playWantedMusic();
 }
 
 export function unlock() {
@@ -23,9 +21,7 @@ export function unlock() {
     const data = noiseBuffer.getChannelData(0);
     for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
   }
-  // The music may have been asked for before sound was allowed: it starts now.
-  if (ctx.state === "running") playWantedMusic();
-  else ctx.resume().then(playWantedMusic, () => {});
+  if (ctx.state === "suspended") ctx.resume().catch(() => {});
 }
 
 function ready() {
@@ -136,97 +132,6 @@ const SOUNDS = {
 
 export function play(name) {
   SOUNDS[name]?.();
-}
-
-// ---------------------------------------------------------------------------------------------
-// The chase tune, played quietly while the turkey runs: "Camptown Races" (Stephen Foster, 1850,
-// public domain), "Goin' to run all night!". A note is [name, beats]; notes are queued a little
-// ahead so they stay in time. It gets faster each day.
-const TUNE = [
-  // Camptown ladies sing this song, doo-dah, doo-dah
-  ["G4", 0.5], ["G4", 0.5], ["E4", 0.5], ["G4", 0.5], ["A4", 0.5], ["G4", 0.5], ["E4", 1], ["E4", 0.5], ["D4", 1.5], ["E4", 0.5], ["D4", 1.5],
-  // Camptown racetrack five miles long, oh, doo-dah day
-  ["G4", 0.5], ["G4", 0.5], ["E4", 0.5], ["G4", 0.5], ["A4", 0.5], ["G4", 0.5], ["E4", 1], ["D4", 1], ["E4", 0.5], ["D4", 0.5], ["C4", 2],
-  // Goin' to run all night, goin' to run all day
-  ["C4", 0.75], ["C4", 0.25], ["E4", 0.5], ["G4", 0.5], ["C5", 2], ["A4", 0.75], ["A4", 0.25], ["C5", 0.5], ["A4", 0.5], ["G4", 2],
-  // I bet my money on a bobtail nag, somebody bet on the bay
-  ["G4", 0.5], ["G4", 0.5], ["E4", 0.5], ["E4", 0.5], ["G4", 0.5], ["G4", 0.5], ["E4", 0.5], ["E4", 0.5],
-  ["D4", 0.5], ["E4", 0.5], ["F4", 0.5], ["E4", 0.5], ["D4", 0.5], ["D4", 0.5], ["C4", 1],
-];
-// the oom-pah under it: the root on the beat, the chord off it (C, F or G, chosen by the melody note)
-const BASS = { C: ["C3", "G3"], D: ["G2", "D3"], E: ["C3", "G3"], F: ["F2", "C3"], G: ["C3", "G3"], A: ["F2", "C3"], B: ["G2", "D3"] };
-
-const STEPS = { C: -9, D: -7, E: -5, F: -4, G: -2, A: 0, B: 2 };
-function pitch(name) {
-  const [, letter, sharp, octave] = /^([A-G])(#?)(\d)$/.exec(name);
-  return 440 * 2 ** ((STEPS[letter] + (sharp ? 1 : 0) + (octave - 4) * 12) / 12);
-}
-
-const music = { wanted: false, on: false, out: null, timer: null, bpm: 150, i: 0, t: 0, beat: 0 };
-
-// Starts the tune from the top at this speed (beats a minute). Asked for before sound is allowed
-// (no touch yet), it starts as soon as unlock() gets it going.
-export function startMusic(bpm = 150) {
-  silence();
-  music.wanted = true;
-  music.bpm = bpm;
-  music.i = 0;
-  playWantedMusic();
-}
-
-export function stopMusic() {
-  music.wanted = false;
-  silence();
-}
-
-function playWantedMusic() {
-  if (!music.wanted || music.on || !ready()) return;
-  music.on = true;
-  music.out = ctx.createGain();
-  music.out.gain.value = 1;
-  music.out.connect(ctx.destination);
-  music.t = music.beat = ctx.currentTime + 0.1;
-  queueMusic();
-}
-
-// Stops what's playing but keeps wanting it, so the next unlock() picks it up again.
-function silence() {
-  if (!music.on) return;
-  music.on = false;
-  clearTimeout(music.timer);
-  const out = music.out;
-  out.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.05);
-  setTimeout(() => out.disconnect(), 400);
-}
-
-function queueMusic() {
-  if (!music.on || !ready()) {
-    silence();
-    return;
-  }
-  const ahead = ctx.currentTime + 0.4;
-  const beat = 60 / music.bpm;
-  let last = "C4";
-  while (music.t < ahead) {
-    if (music.i >= TUNE.length) {
-      music.i = 0;
-      music.t += beat; // a breath, then round again
-      continue;
-    }
-    const [name, beats] = TUNE[music.i++];
-    last = name;
-    tone(pitch(name), beats * beat * 0.8, { type: "square", volume: 0.022, at: music.t, out: music.out });
-    tone(pitch(name) * 2, Math.min(0.08, beats * beat * 0.4), { type: "triangle", volume: 0.015, at: music.t, out: music.out });
-    music.t += beats * beat;
-  }
-  while (music.beat < ahead) {
-    const [root, fifth] = BASS[(TUNE[Math.max(0, music.i - 1)] || [last])[0][0]];
-    tone(pitch(root), beat * 0.4, { type: "triangle", volume: 0.06, at: music.beat, out: music.out });
-    tone(pitch(fifth), beat * 0.25, { type: "triangle", volume: 0.03, at: music.beat + beat / 2, out: music.out });
-    noise(0.04, { volume: 0.02, filter: 7000, type: "highpass", at: music.beat + beat / 2, out: music.out });
-    music.beat += beat;
-  }
-  music.timer = setTimeout(queueMusic, 150);
 }
 
 // ---------------------------------------------------------------------------------------------

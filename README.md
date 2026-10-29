@@ -48,7 +48,7 @@ check each can be got through.
 | `js/scenes/PlayScene.js` | The run: the road, the turkey, the farmer, what's in the way, the corn |
 | `js/scenes/` | Also Boot, Name (initials), Title, Day (the card before each day), Pause, Results, Board |
 | `js/textures.js` | The stand-in art drawn in code. A picture in `img/` with the same name replaces one |
-| `js/audio.js` | Sound effects and the chase tune (Camptown Races) made in code, and the voice player |
+| `js/audio.js` | Sound effects made in code, and the voice player |
 | `js/voices.js` | The turkey's and the farmer's spoken lines; `node tools/make-voices.mjs` records them into `voices/` with Chatterbox on cerebro |
 | `js/storage.js` | What the phone remembers: initials, its top 10, totals |
 | `js/share.js` | Trash talk: the share sheet (or a text message), the score picture, dare links (`?beat=GEN-4250`) |

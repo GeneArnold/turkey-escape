@@ -87,12 +87,8 @@ export class PlayScene extends Phaser.Scene {
     this.listen();
     const away = () => document.hidden && this.pause();
     document.addEventListener("visibilitychange", away);
-    this.events.once("shutdown", () => {
-      document.removeEventListener("visibilitychange", away);
-      audio.stopMusic();
-    });
+    this.events.once("shutdown", () => document.removeEventListener("visibilitychange", away));
     audio.play("gobble");
-    audio.startMusic(150 + this.run.day * 14); // a little faster each day
   }
 
   // ---- input ----
@@ -158,7 +154,6 @@ export class PlayScene extends Phaser.Scene {
   pause() {
     if (this.phase !== "run" || !this.scene.isActive()) return;
     this.scene.pause();
-    audio.stopMusic();
     this.scene.launch("Pause");
   }
 
@@ -469,7 +464,6 @@ export class PlayScene extends Phaser.Scene {
     this.run.score += POINTS.day;
     const last = this.run.day === DAYS.length - 1;
     const show = MADE_IT[this.run.day];
-    audio.stopMusic();
     audio.play(last ? "fanfare" : "cheer");
     const dim = this.add.rectangle(0, 0, W, H, 0x000000, 0.5).setOrigin(0).setDepth(4900).setAlpha(0);
     this.tweens.add({ targets: dim, alpha: 1, duration: 250 });
@@ -530,7 +524,6 @@ export class PlayScene extends Phaser.Scene {
 
   caught() {
     this.phase = "caught";
-    audio.stopMusic();
     audio.play("pan");
     this.time.delayedCall(200, () => audio.say("farmer-caught"));
     this.cameras.main.shake(250, 0.012);
